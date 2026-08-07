@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   final TextEditingController _productController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
@@ -33,10 +33,16 @@ class _HomePageState extends State<HomePage> {
   bool _isOpeningContact = false;
   bool _whatsAppPulse = false;
   Timer? _whatsAppAnimationTimer;
+  late final AnimationController _newsTickerController;
 
   @override
   void initState() {
     super.initState();
+
+    _newsTickerController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 18),
+    )..repeat();
 
     _whatsAppAnimationTimer = Timer.periodic(
       const Duration(seconds: 4),
@@ -57,6 +63,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _whatsAppAnimationTimer?.cancel();
+    _newsTickerController.dispose();
     _productController.dispose();
     _brandController.dispose();
     _widthController.dispose();
@@ -324,6 +331,50 @@ ${_valueOrDefault(_ideaController.text)}
     );
   }
 
+  Widget _topNewsTicker() {
+    const tickerText =
+        '📞 الهاتف: 0770105328     •     💬 WhatsApp: 0770105328     •     🔵 Facebook: Hilo Print     •     🎨 التصميم مجاني     •     🚚 التوصيل متوفر';
+
+    return Container(
+      height: 38,
+      width: double.infinity,
+      color: const Color(0xFFF47721),
+      clipBehavior: Clip.hardEdge,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return AnimatedBuilder(
+            animation: _newsTickerController,
+            builder: (context, child) {
+              final travelDistance = constraints.maxWidth + 1050;
+              final x = constraints.maxWidth -
+                  (_newsTickerController.value * travelDistance);
+              return Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  Transform.translate(
+                    offset: Offset(x, 0),
+                    child: const Text(
+                      tickerText,
+                      maxLines: 1,
+                      softWrap: false,
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        height: 1.1,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.sizeOf(context).width < 700;
@@ -375,6 +426,10 @@ ${_valueOrDefault(_ideaController.text)}
             ),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(38),
+          child: _topNewsTicker(),
+        ),
       ),
       bottomNavigationBar: SafeArea(
         top: false,
