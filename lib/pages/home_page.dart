@@ -332,30 +332,67 @@ ${_valueOrDefault(_ideaController.text)}
   }
 
   Widget _topNewsTicker() {
-    const tickerText =
-        '📞 الهاتف: 0770085877     •     💬 WhatsApp: 0770085877     •     🔵 Facebook: Hilo Print     •     🎨 التصميم مجاني     •     🚚 التوصيل متوفر';
+    const double itemGap = 28;
+    const double cycleWidth = 930;
 
-    const double segmentWidth = 1120;
-    const double gap = 70;
-    const double cycleWidth = segmentWidth + gap;
-
-    Widget tickerSegment() {
+    Widget tickerContent() {
       return const SizedBox(
-        width: segmentWidth,
+        width: cycleWidth,
         height: 38,
-        child: Center(
-          child: Text(
-            tickerText,
-            maxLines: 1,
-            softWrap: false,
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
-              height: 1.1,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          textDirection: TextDirection.rtl,
+          children: [
+            Text(
+              '📞 0770085877',
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+              ),
             ),
-          ),
+            SizedBox(width: itemGap),
+            Text(
+              '💬 WhatsApp: 0770085877',
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            SizedBox(width: itemGap),
+            Text(
+              '🔵 Facebook: Hilo Print',
+              textDirection: TextDirection.ltr,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            SizedBox(width: itemGap),
+            Text(
+              '🎨 التصميم مجاني',
+              textDirection: TextDirection.rtl,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            SizedBox(width: itemGap),
+            Text(
+              '🚚 التوصيل متوفر',
+              textDirection: TextDirection.rtl,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -367,25 +404,32 @@ ${_valueOrDefault(_ideaController.text)}
         color: Color(0xFFF47721),
       ),
       clipBehavior: Clip.hardEdge,
-      child: AnimatedBuilder(
-        animation: _newsTickerController,
-        builder: (context, child) {
-          final offset = -(_newsTickerController.value * cycleWidth);
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return AnimatedBuilder(
+            animation: _newsTickerController,
+            builder: (context, child) {
+              // Start just outside the right edge and move continuously left.
+              final startX = constraints.maxWidth;
+              final travel = constraints.maxWidth + cycleWidth;
+              final x = startX - (_newsTickerController.value * travel);
 
-          return Stack(
-            clipBehavior: Clip.hardEdge,
-            children: [
-              Positioned(
-                left: offset,
-                top: 0,
-                child: tickerSegment(),
-              ),
-              Positioned(
-                left: offset + cycleWidth,
-                top: 0,
-                child: tickerSegment(),
-              ),
-            ],
+              return Stack(
+                clipBehavior: Clip.hardEdge,
+                children: [
+                  Positioned(
+                    left: x,
+                    top: 0,
+                    child: tickerContent(),
+                  ),
+                  Positioned(
+                    left: x + cycleWidth + 50,
+                    top: 0,
+                    child: tickerContent(),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),
