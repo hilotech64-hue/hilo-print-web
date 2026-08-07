@@ -59,8 +59,8 @@ class _RequestFormState extends State<RequestForm> {
     }
   }
 
-  Future<void> _openFacebook() async {
-    final bool opened = await ContactService.openFacebook();
+  Future<void> _openMessenger() async {
+    final bool opened = await ContactService.openMessenger();
 
     if (!mounted) return;
 
@@ -68,7 +68,7 @@ class _RequestFormState extends State<RequestForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'تعذر فتح صفحة فيسبوك.',
+            'تعذر فتح ماسنجر.',
             textAlign: TextAlign.center,
           ),
         ),
@@ -201,13 +201,13 @@ class _RequestFormState extends State<RequestForm> {
             SizedBox(
               height: 52,
               child: OutlinedButton.icon(
-                onPressed: _openFacebook,
+                onPressed: _openMessenger,
                 icon: const Icon(
                   Icons.facebook_rounded,
                   color: Color(0xFF1877F2),
                 ),
                 label: const Text(
-                  'زيارة صفحتنا على فيسبوك',
+                  'متابعة عبر ماسنجر',
                   textDirection: TextDirection.rtl,
                   style: TextStyle(
                     fontSize: 16,

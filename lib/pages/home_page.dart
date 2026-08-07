@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../services/contact_service.dart';
@@ -29,9 +31,32 @@ class _HomePageState extends State<HomePage> {
   int? _selectedQuantity;
   bool _customQuantity = false;
   bool _isOpeningContact = false;
+  bool _whatsAppPulse = false;
+  Timer? _whatsAppAnimationTimer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _whatsAppAnimationTimer = Timer.periodic(
+      const Duration(seconds: 4),
+          (_) {
+        if (!mounted || _isOpeningContact) return;
+
+        setState(() => _whatsAppPulse = true);
+
+        Future.delayed(const Duration(milliseconds: 420), () {
+          if (mounted) {
+            setState(() => _whatsAppPulse = false);
+          }
+        });
+      },
+    );
+  }
 
   @override
   void dispose() {
+    _whatsAppAnimationTimer?.cancel();
     _productController.dispose();
     _brandController.dispose();
     _widthController.dispose();
@@ -159,7 +184,7 @@ ${_valueOrDefault(_ideaController.text)}
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Color(0xFF1565C0), width: 2),
+        borderSide: const BorderSide(color: Color(0xFFF47721), width: 2),
       ),
     );
   }
@@ -194,10 +219,10 @@ ${_valueOrDefault(_ideaController.text)}
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEAF3FF),
+                  color: const Color(0xFFFFF1E8),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(icon, color: const Color(0xFF1565C0)),
+                child: Icon(icon, color: const Color(0xFFF47721)),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -208,7 +233,7 @@ ${_valueOrDefault(_ideaController.text)}
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF102A43),
+                    color: Color(0xFF181818),
                   ),
                 ),
               ),
@@ -241,17 +266,17 @@ ${_valueOrDefault(_ideaController.text)}
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFFEAF3FF) : const Color(0xFFF8FAFC),
+          color: selected ? const Color(0xFFFFF1E8) : const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: selected ? const Color(0xFF1565C0) : const Color(0xFFD7E1EC),
+            color: selected ? const Color(0xFFF47721) : const Color(0xFFD7E1EC),
             width: selected ? 2 : 1,
           ),
         ),
         child: Row(
           textDirection: TextDirection.rtl,
           children: [
-            Icon(icon, color: const Color(0xFF1565C0)),
+            Icon(icon, color: const Color(0xFFF47721)),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -260,12 +285,12 @@ ${_valueOrDefault(_ideaController.text)}
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF183B56),
+                  color: Color(0xFF2A2A2A),
                 ),
               ),
             ),
             if (selected)
-              const Icon(Icons.check_circle_rounded, color: Color(0xFF1565C0)),
+              const Icon(Icons.check_circle_rounded, color: Color(0xFFF47721)),
           ],
         ),
       ),
@@ -287,12 +312,12 @@ ${_valueOrDefault(_ideaController.text)}
       },
       labelStyle: TextStyle(
         fontWeight: FontWeight.w800,
-        color: selected ? const Color(0xFF1565C0) : const Color(0xFF183B56),
+        color: selected ? const Color(0xFFF47721) : const Color(0xFF2A2A2A),
       ),
-      selectedColor: const Color(0xFFEAF3FF),
+      selectedColor: const Color(0xFFFFF1E8),
       backgroundColor: const Color(0xFFF8FAFC),
       side: BorderSide(
-        color: selected ? const Color(0xFF1565C0) : const Color(0xFFD7E1EC),
+        color: selected ? const Color(0xFFF47721) : const Color(0xFFD7E1EC),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -304,21 +329,35 @@ ${_valueOrDefault(_ideaController.text)}
     final isMobile = MediaQuery.sizeOf(context).width < 700;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F7FB),
+      backgroundColor: const Color(0xFFF7F7F7),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         elevation: 0,
         titleSpacing: isMobile ? 16 : 28,
-        title: const Text(
-          'HILO PRINT',
-          style: TextStyle(
-            color: Color(0xFF1565C0),
-            fontSize: 19,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1,
-          ),
+        title: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/images/logo.webp',
+                width: 42,
+                height: 42,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'HILO PRINT',
+              style: TextStyle(
+                color: Color(0xFFF47721),
+                fontSize: 19,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1,
+              ),
+            ),
+          ],
         ),
         actions: [
           Padding(
@@ -352,35 +391,40 @@ ${_valueOrDefault(_ideaController.text)}
               ),
             ],
           ),
-          child: SizedBox(
-            height: 58,
-            child: ElevatedButton.icon(
-              onPressed: _isOpeningContact ? null : _openWhatsApp,
-              icon: _isOpeningContact
-                  ? const SizedBox(
-                width: 21,
-                height: 21,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.4,
-                  color: Colors.white,
+          child: AnimatedScale(
+            scale: _whatsAppPulse ? 1.025 : 1.0,
+            duration: const Duration(milliseconds: 210),
+            curve: Curves.easeInOut,
+            child: SizedBox(
+              height: 58,
+              child: ElevatedButton.icon(
+                onPressed: _isOpeningContact ? null : _openWhatsApp,
+                icon: _isOpeningContact
+                    ? const SizedBox(
+                  width: 21,
+                  height: 21,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.4,
+                    color: Colors.white,
+                  ),
+                )
+                    : const Icon(Icons.chat_rounded, color: Colors.white),
+                label: Text(
+                  _isOpeningContact ? 'جاري الفتح...' : 'إرسال الطلب عبر واتساب',
+                  textDirection: TextDirection.rtl,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                  ),
                 ),
-              )
-                  : const Icon(Icons.chat_rounded, color: Colors.white),
-              label: Text(
-                _isOpeningContact ? 'جاري الفتح...' : 'إرسال الطلب عبر واتساب',
-                textDirection: TextDirection.rtl,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF16A765),
-                disabledBackgroundColor: const Color(0xAA16A765),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF16A765),
+                  disabledBackgroundColor: const Color(0xAA16A765),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
               ),
             ),
@@ -426,7 +470,7 @@ ${_valueOrDefault(_ideaController.text)}
                         Icon(
                           Icons.local_printshop_rounded,
                           size: 56,
-                          color: Color(0xFF1565C0),
+                          color: Color(0xFFF47721),
                         ),
                         SizedBox(height: 14),
                         Text(
@@ -436,7 +480,7 @@ ${_valueOrDefault(_ideaController.text)}
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w900,
-                            color: Color(0xFF102A43),
+                            color: Color(0xFF181818),
                           ),
                         ),
                         SizedBox(height: 8),

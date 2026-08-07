@@ -15,7 +15,7 @@ class PrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.isLoading = false,
-    this.backgroundColor = const Color(0xFF1565C0),
+    this.backgroundColor = const Color(0xFFF47721),
     this.height = 58,
     this.borderRadius = 16,
   });
@@ -31,7 +31,7 @@ class PrimaryButton extends StatelessWidget {
         onPressed: enabled ? onPressed : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
-          disabledBackgroundColor: backgroundColor.withOpacity(0.55),
+          disabledBackgroundColor: backgroundColor.withValues(alpha: 0.55),
           elevation: 0,
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(

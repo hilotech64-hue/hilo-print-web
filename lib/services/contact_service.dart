@@ -1,10 +1,13 @@
 import 'package:url_launcher/url_launcher.dart';
 
+import 'analytics_stub.dart'
+if (dart.library.js_interop) 'analytics_web.dart';
+
 class ContactService {
   static const String whatsappNumber = '213770085877';
 
   static const String messengerUrl =
-      'https://www.facebook.com/profile.php?id=61583967781975&locale=ar_AR';
+      'https://m.me/61583967781975';
 
   static String buildMessage({
     required String product,
@@ -45,6 +48,8 @@ $designIdea
           '?text=${Uri.encodeComponent(message)}',
     );
 
+    AnalyticsTracker.trackEvent('whatsapp_click');
+
     return launchUrl(
       uri,
       mode: LaunchMode.externalApplication,
@@ -54,6 +59,8 @@ $designIdea
 
   static Future<bool> openMessenger() async {
     final Uri uri = Uri.parse(messengerUrl);
+
+    AnalyticsTracker.trackEvent('messenger_click');
 
     return launchUrl(
       uri,
