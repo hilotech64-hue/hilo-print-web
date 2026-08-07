@@ -333,7 +333,7 @@ ${_valueOrDefault(_ideaController.text)}
 
   Widget _topNewsTicker() {
     const tickerText =
-        '📞 الهاتف: 0770105328     •     💬 WhatsApp: 0770105328     •     🔵 Facebook: Hilo Print     •     🎨 التصميم مجاني     •     🚚 التوصيل متوفر';
+        '📞 الهاتف: 0770085877     •     💬 WhatsApp: 0770085877     •     🔵 Facebook: Hilo Print     •     🎨 التصميم مجاني     •     🚚 التوصيل متوفر';
 
     return Container(
       height: 38,

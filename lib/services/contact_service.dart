@@ -4,7 +4,7 @@ import 'analytics_stub.dart'
 if (dart.library.js_interop) 'analytics_web.dart';
 
 class ContactService {
-  static const String phoneNumber = '213770105328';
+  static const String phoneNumber = '213770085877';
 
   static const String facebookPageUrl =
       'https://www.facebook.com/profile.php?id=61583967781975&locale=ar_AR';
