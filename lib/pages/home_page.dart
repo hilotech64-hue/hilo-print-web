@@ -130,10 +130,10 @@ ${_valueOrDefault(_ideaController.text)}
     );
   }
 
-  Future<void> _openMessenger() async {
+  Future<void> _openFacebookPage() async {
     await _openContact(
-      action: ContactService.openMessenger,
-      errorMessage: 'تعذر فتح ماسنجر، حاول مرة أخرى.',
+      action: ContactService.openFacebookPage,
+      errorMessage: 'تعذر فتح صفحة فيسبوك، حاول مرة أخرى.',
     );
   }
 
@@ -338,7 +338,9 @@ ${_valueOrDefault(_ideaController.text)}
     return Container(
       height: 38,
       width: double.infinity,
-      color: const Color(0xFFF47721),
+      decoration: const BoxDecoration(
+        color: Color(0xFFF47721),
+      ),
       clipBehavior: Clip.hardEdge,
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -752,10 +754,10 @@ ${_valueOrDefault(_ideaController.text)}
                           width: double.infinity,
                           height: 56,
                           child: OutlinedButton.icon(
-                            onPressed: _isOpeningContact ? null : _openMessenger,
+                            onPressed: _isOpeningContact ? null : _openFacebookPage,
                             icon: const Icon(Icons.facebook_rounded, color: Color(0xFF1877F2)),
                             label: const Text(
-                              'متابعة عبر ماسنجر',
+                              'زيارة صفحتنا على فيسبوك',
                               textDirection: TextDirection.rtl,
                               style: TextStyle(
                                 fontSize: 16,
