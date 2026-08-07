@@ -335,6 +335,31 @@ ${_valueOrDefault(_ideaController.text)}
     const tickerText =
         '📞 الهاتف: 0770085877     •     💬 WhatsApp: 0770085877     •     🔵 Facebook: Hilo Print     •     🎨 التصميم مجاني     •     🚚 التوصيل متوفر';
 
+    const double segmentWidth = 1120;
+    const double gap = 70;
+    const double cycleWidth = segmentWidth + gap;
+
+    Widget tickerSegment() {
+      return const SizedBox(
+        width: segmentWidth,
+        height: 38,
+        child: Center(
+          child: Text(
+            tickerText,
+            maxLines: 1,
+            softWrap: false,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w900,
+              height: 1.1,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Container(
       height: 38,
       width: double.infinity,
@@ -342,35 +367,25 @@ ${_valueOrDefault(_ideaController.text)}
         color: Color(0xFFF47721),
       ),
       clipBehavior: Clip.hardEdge,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return AnimatedBuilder(
-            animation: _newsTickerController,
-            builder: (context, child) {
-              final travelDistance = constraints.maxWidth + 1050;
-              final x = constraints.maxWidth -
-                  (_newsTickerController.value * travelDistance);
-              return Stack(
-                alignment: Alignment.centerLeft,
-                children: [
-                  Transform.translate(
-                    offset: Offset(x, 0),
-                    child: const Text(
-                      tickerText,
-                      maxLines: 1,
-                      softWrap: false,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        height: 1.1,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
+      child: AnimatedBuilder(
+        animation: _newsTickerController,
+        builder: (context, child) {
+          final offset = -(_newsTickerController.value * cycleWidth);
+
+          return Stack(
+            clipBehavior: Clip.hardEdge,
+            children: [
+              Positioned(
+                left: offset,
+                top: 0,
+                child: tickerSegment(),
+              ),
+              Positioned(
+                left: offset + cycleWidth,
+                top: 0,
+                child: tickerSegment(),
+              ),
+            ],
           );
         },
       ),
